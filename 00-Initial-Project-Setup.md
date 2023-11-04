@@ -1,4 +1,6 @@
 ![Initial Setup](/00-Initial.webp)
+
+
 # Session 0: Initial Project Setup and Boilerplate
 
 ## Goal
