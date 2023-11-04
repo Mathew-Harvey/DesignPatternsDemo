@@ -1,5 +1,4 @@
-![Initial Setup](/00-Inital.webp)
-
+<img src="00-Initial.webp" alt="Initial Setup" width="300"/>
 
 # Session 0: Initial Project Setup and Boilerplate
 
