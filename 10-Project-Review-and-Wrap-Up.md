@@ -1,4 +1,4 @@
-# Session 9: Project Review and Wrap-Up
+# Session 10: Project Review and Wrap-Up
 
 ## Goal
 Conduct a thorough review of the web application, ensuring all design pattern demonstrations function as intended and provide valuable learning experiences. Reflect on the patterns implemented, their use cases, and lessons learned throughout the development process.
