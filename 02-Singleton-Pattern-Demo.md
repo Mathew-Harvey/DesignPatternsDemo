@@ -1,3 +1,4 @@
+<img src="02-Singleton.webp" alt="Singleton" width="300"/>
 # Session 2: Implementing the Singleton Pattern Demo
 
 ## Goal
