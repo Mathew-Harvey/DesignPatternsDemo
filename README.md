@@ -1,3 +1,46 @@
+# Design Patterns Web Application Project
+
+## Project Overview
+This project is an exploration into the implementation of classic design patterns within a web application context, using a C# backend, MongoDB for data storage, and a JavaScript, HTML, and CSS frontend. Each session focuses on a different design pattern, providing a practical example of its use.
+
+### Goals
+- To create a web application showcasing eight fundamental design patterns.
+- To provide clear examples and explanations of each pattern.
+- To develop an understanding of how these patterns can be used in real-world scenarios.
+
+### Development Setup
+Before starting with the individual design patterns, make sure to set up your development environment and project structure by following the instructions in [Initial Project Setup and Boilerplate](00-Initial-Project-Setup.md).
+
+### Sessions
+Each session below will guide you through the implementation of a specific design pattern.
+
+1. **[Session 1: Singleton Pattern](01-Singleton-Pattern.md)**
+   - Establish a single instance of a database connection using the Singleton pattern.
+2. **[Session 2: Factory Method Pattern](02-Factory-Method-Pattern.md)**
+   - Learn how to use the Factory Method to create objects.
+3. **[Session 3: Abstract Factory Pattern](03-Abstract-Factory-Pattern.md)**
+   - Implement a family of related objects with the Abstract Factory.
+4. **[Session 4: Builder Pattern](04-Builder-Pattern.md)**
+   - Construct complex objects step by step using the Builder pattern.
+5. **[Session 5: Prototype Pattern](05-Prototype-Pattern.md)**
+   - Create new objects by copying existing ones with the Prototype pattern.
+6. **[Session 6: Adapter Pattern](06-Adapter-Pattern.md)**
+   - Make incompatible interfaces work together with the Adapter pattern.
+7. **[Session 7: Decorator Pattern](07-Decorator-Pattern.md)**
+   - Add responsibilities to objects dynamically using the Decorator pattern.
+8. **[Session 8: Facade Pattern](08-Facade-Pattern.md)**
+   - Provide a simplified interface to a complex system with the Facade pattern.
+9. **[Session 9: Project Review and Wrap-Up](09-Project-Review-and-Wrap-Up.md)**
+   - Review and reflect on the patterns implemented in the project.
+
+## Contributing
+Feel free to fork this repository and contribute to improving the examples and documentation for each design pattern.
+
+## License
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+
+
 # DesignPatternsDemo
 Explore key software design patterns through a hands-on web app with C# backend, MongoDB, and JS/HTML/CSS frontend, guided by AI-based instructional design.
 
