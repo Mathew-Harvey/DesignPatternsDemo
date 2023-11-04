@@ -1,3 +1,5 @@
+<img src="01-Proj-Setup.webp" alt="Initial Setup" width="300"/>
+
 # Session 1: Setting Up the Project Framework
 
 ## Goal
