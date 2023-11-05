@@ -43,7 +43,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 
 
-# DesignPatternsDemo
+# DesignPatterns
 Explore key software design patterns through a hands-on web app with C# backend, MongoDB, and JS/HTML/CSS frontend, guided by AI-based instructional design.
 
 # Design Patterns Web Application
