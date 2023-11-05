@@ -6,8 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-
-var mongoConnectionString = builder.Configuration.GetConnectionString("MongoDB");
+var mongoConnectionString = builder.Configuration["ConnectionStrings:MongoDB"] ?? "your-default-connection-string";
+// var mongoConnectionString = builder.Configuration.GetConnectionString("MongoDB");
 var mongoDatabaseName = builder.Configuration["MongoDB:DatabaseName"];
 var mongoClient = new MongoClient(mongoConnectionString);
 
