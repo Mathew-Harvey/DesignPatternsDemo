@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
-using DesignPatterns.Models; 
-using DesignPatterns.Repositories; 
+using DesignPatterns.Models;
+using DesignPatterns.Repositories;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 
 namespace DesignPatterns.Controllers
 {
-    public class ItemsController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    [EnableCors("AllowMyFrontend")]
+    public class ItemsController : ControllerBase
     {
         private readonly ItemRepository _itemRepository;
 
@@ -14,99 +18,71 @@ namespace DesignPatterns.Controllers
             _itemRepository = itemRepository;
         }
 
-        // GET: Items
-        public async Task<IActionResult> Index()
+        // GET: api/items
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
         {
             var items = await _itemRepository.GetAllAsync();
-            return View(items);
+            return Ok(items);
         }
 
-        // GET: Items/Details/5
-        public async Task<IActionResult> Details(string id)
+        // GET: api/items/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Item>> Details(string id)
         {
             var item = await _itemRepository.GetByIdAsync(id);
             if (item == null)
             {
                 return NotFound();
             }
-            return View(item);
+            return item;
         }
 
-        // GET: Items/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Items/Create
+        // POST: api/items
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description")] Item item)
+        public async Task<ActionResult<Item>> Create([FromBody] Item item)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _itemRepository.AddAsync(item);
-                return RedirectToAction("Index", "Home");
+                return BadRequest(ModelState);
             }
-            return View(item);
+            await _itemRepository.AddAsync(item);
+            return CreatedAtAction(nameof(Details), new { id = item.Id }, item);
         }
 
-        // GET: Items/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            var item = await _itemRepository.GetByIdAsync(id);
-            if (item == null)
-            {
-                return NotFound();
-            }
-            return View(item);
-        }
-
-        // POST: Items/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Description")] Item item)
+        // PUT: api/items/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Edit(string id, [FromBody] Item item)
         {
             if (id != item.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var success = await _itemRepository.UpdateAsync(id, item);
-                if (!success)
-                {
-                    return NotFound(); // Or some other error handling
-                }
-                return RedirectToAction("Index", "Home");
+                return BadRequest(ModelState);
             }
-            return View(item);
-        }
 
-        // GET: Items/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            var item = await _itemRepository.GetByIdAsync(id);
-            if (item == null)
+            var success = await _itemRepository.UpdateAsync(id, item);
+            if (!success)
             {
                 return NotFound();
             }
-            return View(item);
+
+            return NoContent();
         }
 
-        // POST: Items/Delete/5
-        [HttpPost, ActionName("DeleteConfirmed")]
-        [ValidateAntiForgeryToken]
+        // DELETE: api/items/5
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var success = await _itemRepository.DeleteAsync(id);
             if (!success)
             {
-                return NotFound(); // Or some other error handling
+                return NotFound();
             }
-            return RedirectToAction("Index", "Home");
+            return NoContent();
         }
-        
     }
 }

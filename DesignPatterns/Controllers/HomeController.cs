@@ -1,44 +1,31 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using DesignPatterns.Models;
-using DesignPatterns.Repositories;
-using System.Threading.Tasks;
 
 namespace DesignPatterns.Controllers
 {
-
-    public class HomeController : Controller
+    [ApiController]
+    public class HomeController : ControllerBase
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ItemRepository _itemRepository;
 
-        public HomeController(ILogger<HomeController> logger, ItemRepository itemRepository)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _itemRepository = itemRepository;
         }
 
-
-        public IActionResult Privacy()
+        [HttpGet("/")]
+        public ActionResult Home()
         {
-            return View();
+            // This could return some basic info or simply a message that the API is up and running
+            return Ok(new { Message = "Welcome to the DesignPatterns API" });
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        // You might want to keep this action to handle errors in your API
+        [HttpGet("/error")]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return Problem(detail: "An unexpected error occurred.", statusCode: 500);
         }
-        public async Task<IActionResult> Index()
-        {
-            var items = await _itemRepository.GetAllAsync();
-            // Ensure items is not null. If items is null, initialize it to an empty list.
-            if (items == null)
-            {
-                items = new List<Item>();
-            }
-            return View(items);
-        }
-
     }
 }

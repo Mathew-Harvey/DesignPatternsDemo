@@ -5,7 +5,7 @@ using MongoDB.Driver;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
 
 var mongoConnectionString = builder.Configuration.GetConnectionString("MongoDB");
 var mongoDatabaseName = builder.Configuration["MongoDB:DatabaseName"];
@@ -23,6 +23,15 @@ builder.Services.AddScoped<ItemRepository>(serviceProvider =>
     return new ItemRepository(mongoClient, mongoDatabaseName);
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMyFrontend",
+        builder => builder.WithOrigins("http://192.168.50.242:3001") // Replace with the actual port and domain of your frontend
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,6 +48,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseCors("AllowMyFrontend");
 
 app.MapControllerRoute(
     name: "default",
