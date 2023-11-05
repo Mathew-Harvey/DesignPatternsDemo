@@ -14,25 +14,25 @@ Before starting with the individual design patterns, make sure to set up your de
 ### Sessions
 Each session below will guide you through the implementation of a specific design pattern.
 
-1. **[Session 1: Project Setup](01-Setup-Framework-Structure.md)**
+1. **[Session 1: Project Setup](documentation/01-Setup-Framework-Structure.md)**
    - Establish a single instance of a database connection using the Singleton pattern.
-2. **[Session 2: Singleton Pattern](02-Singleton-Pattern.md)**
+2. **[Session 2: Singleton Pattern](documentation/02-Singleton-Pattern.md)**
    - Establish a single instance of a database connection using the Singleton pattern.
-4. **[Session 3: Factory Method Pattern](03-Factory-Method-Pattern.md)**
+4. **[Session 3: Factory Method Pattern](documentation/03-Factory-Method-Pattern.md)**
    - Learn how to use the Factory Method to create objects.
-5. **[Session 4: Abstract Factory Pattern](04-Abstract-Factory-Pattern.md)**
+5. **[Session 4: Abstract Factory Pattern](documentation/04-Abstract-Factory-Pattern.md)**
    - Implement a family of related objects with the Abstract Factory.
-6. **[Session 5: Builder Pattern](05-Builder-Pattern.md)**
+6. **[Session 5: Builder Pattern](documentation/05-Builder-Pattern.md)**
    - Construct complex objects step by step using the Builder pattern.
-7. **[Session 6: Prototype Pattern](06-Prototype-Pattern.md)**
+7. **[Session 6: Prototype Pattern](documentation/06-Prototype-Pattern.md)**
    - Create new objects by copying existing ones with the Prototype pattern.
-8. **[Session 7: Adapter Pattern](07-Adapter-Pattern.md)**
+8. **[Session 7: Adapter Pattern](documentation/07-Adapter-Pattern.md)**
    - Make incompatible interfaces work together with the Adapter pattern.
-9. **[Session 8: Decorator Pattern](08-Decorator-Pattern.md)**
+9. **[Session 8: Decorator Pattern](documentation/08-Decorator-Pattern.md)**
    - Add responsibilities to objects dynamically using the Decorator pattern.
-10. **[Session 9: Facade Pattern](09-Facade-Pattern.md)**
+10. **[Session 9: Facade Pattern](documentation/09-Facade-Pattern.md)**
    - Provide a simplified interface to a complex system with the Facade pattern.
-11. **[Session 10: Project Review and Wrap-Up](10-Project-Review-and-Wrap-Up.md)**
+11. **[Session 10: Project Review and Wrap-Up](documentation/10-Project-Review-and-Wrap-Up.md)**
    - Review and reflect on the patterns implemented in the project.
 
 ## Contributing
