@@ -16,7 +16,7 @@ namespace DesignPatterns.Services
         private PrinterQueueService()
         {
             // Start the timer with an immediate first tick, then continue every 5 seconds
-            _processingTimer = new Timer(ProcessQueue, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+            _processingTimer = new Timer(ProcessQueue, null, TimeSpan.Zero, TimeSpan.FromSeconds(7));
         }
 
         public static PrinterQueueService Instance => _instance.Value;
