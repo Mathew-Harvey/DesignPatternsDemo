@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.9/signalr.min.js"></script>
+
+    <title>Singleton Printer Queue Demo</title>
+    <style>
+        .user,
+        .printer {
+            padding: 20px;
+            margin: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .user {
+            background-color: #add8e6;
+        }
+
+        .printer {
+            background-color: #90ee90;
+        }
+
+        #queue {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<nav>
+    <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../patterns/todo.html">todo list</a></li>
+        <!-- Add other design pattern links here -->
+    </ul>
+</nav>
+
+<body>
+    <h1>Printer Queue Demo</h1>
+
+    <div id="users">
+        <div class="user" onclick="sendPrintJob('User 1')">User 1: Click to send a print job</div>
+        <div class="user" onclick="sendPrintJob('User 2')">User 2: Click to send a print job</div>
+        <div class="user" onclick="sendPrintJob('User 3')">User 3: Click to send a print job</div>
+    </div>
+
+    <div class="printer">Printer: Waiting for jobs...</div>
+
+    <div id="queue">
+        <h2>Print Queue:</h2>
+        <div id="queueList">No jobs in queue.</div>
+    </div>
+    <div>
+        <p>The printer analogy for the Singleton design pattern serves as a conceptual model that illustrates the
+            pattern's core principle: ensuring that a class has only one instance and providing a global point of access
+            to it. In a typical office environment, a shared printer is a common resource that multiple users or systems
+            might need to access. The Singleton pattern embodies this by managing the printer queue through a single,
+            globally accessible service instance, just as an office would have a single, centralized printer serving
+            multiple employees. By enforcing a single access point for all print jobs and ensuring that they are
+            processed in an orderly manner, the Singleton pattern in this scenario ensures coordinated access to the
+            shared resource, preventing conflicts and managing the queue effectively.</p>
+
+        <p>The `PrinterQueueService` in our application acts as the Singleton, mirroring the single shared printer in an
+            office. Just like a physical printer would manage a queue of documents to print, our service manages a queue
+            of print jobs, ensuring that despite numerous simultaneous requests to print, each job is processed
+            sequentially and exactly once. This reflects the Singleton pattern's utility in managing shared resources—by
+            providing a single instance of the `PrinterQueueService`, the application ensures that all print jobs are
+            centralized in one managed queue, preventing duplicate processing and allowing for efficient use of the
+            printing resource. The use of a Singleton here is crucial for maintaining the integrity and consistency of
+            the print job processing throughout the application's lifecycle.</p>
+    </div>
+    <script src="../js/script.js"></script>
+    <script src="../js/singleton.js"></script>
+</body>
+
+</html>

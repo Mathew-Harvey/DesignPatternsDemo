@@ -7,35 +7,24 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <h1>Design Patterns Items</h1>
+    <h1>Design Patterns Demo</h1>
+    
+    <!-- Menu for Design Patterns -->
+    <nav>
+        <ul>
+            <li><a href="patterns/todo.html">To Do Application</a></li>
+            <li><a href="patterns/singleton.html">Singleton Pattern</a></li>
+            <!-- Add other design pattern links here -->
+        </ul>
+    </nav>
 
-    <!-- New Item Form -->
-    <div id="new-item-form">
-        <h2>Add New Item</h2>
-        <form id="addItemForm">
-            <input type="text" id="newItemName" placeholder="Name" required>
-            <input type="text" id="newItemDescription" placeholder="Description" required>
-            <button type="submit">Add Item</button>
-        </form>
-    </div>
-
-    <!-- Items List -->
-    <div id="items-container">
-        <!-- Items will be loaded here by JavaScript -->
-    </div>
-
-    <!-- Hidden form for editing items -->
-    <div id="edit-item-form" style="display:none;">
-        <h2>Edit Item</h2>
-        <form id="editItemForm">
-            <input type="hidden" id="editItemId">
-            <input type="text" id="editItemName" placeholder="Name" required>
-            <input type="text" id="editItemDescription" placeholder="Description" required>
-            <button type="submit">Update Item</button>
-            <button type="button" onclick="cancelEdit()">Cancel</button>
-        </form>
+    <!-- You might want to keep the existing forms and list, or move them to specific pattern pages -->
+    <div id="existing-content">
+        <!-- Existing content here -->
     </div>
 
     <script src="js/script.js"></script>
+    <script src="js/singleton.js"></script>
+    <script src="js/todo.js"></script>
 </body>
 </html>
