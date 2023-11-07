@@ -4,14 +4,23 @@ using System.Threading.Tasks;
 public class PrinterHub : Hub
 {
     // This method can be called by clients to send a new print job
-    public async Task SendPrintJob(string jobName)
+    public async Task SendPrintJob(string jobName, int deskX, int deskY)
     {
         // You might add logic here to enqueue the job to the server-side printer queue
 
         // Notify all clients that a new job has been added
-        await Clients.All.SendAsync("NewJobReceived", jobName);
+        await Clients.All.SendAsync("NewJobEnqueued", new { jobName, x = deskX, y = deskY});
     }
+     public async Task StartProcessingJob(string jobName)
+    {
+        // Logic to start processing the job
 
+        // Simulate job processing with a delay (this would be asynchronous in real-life scenarios)
+        await Task.Delay(5000); // Delay for 5 seconds to simulate processing
+
+        // Once processing is done, notify the client
+        await Clients.Caller.SendAsync("JobProcessed", jobName);
+    }
     // This method can be called from the server to notify clients that a job is processed
     public async Task JobProcessed(string jobName)
     {

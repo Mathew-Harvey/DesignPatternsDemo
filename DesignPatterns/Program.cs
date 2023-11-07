@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSignalR();
+
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
+
+// Configure mongoDb
 var mongoConnectionString = builder.Configuration["ConnectionStrings:MongoDB"] ?? "your-default-connection-string";
 var mongoDatabaseName = builder.Configuration["MongoDB:DatabaseName"];
 var mongoClient = new MongoClient(mongoConnectionString);
@@ -44,10 +47,10 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+
 app.UseCors("CorsPolicy");
 
-var hubContext = app.Services.GetRequiredService<IHubContext<PrinterHub>>();
-PrinterQueueService.Instance.SetHubContext(hubContext);
+
 
 app.MapHub<PrinterHub>("/printerhub");
 
@@ -66,10 +69,14 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.UseCors("CorsPolicy");
+
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+    
+
+var hubContext = app.Services.GetRequiredService<IHubContext<PrinterHub>>();
+PrinterQueueService.Instance.SetHubContext(hubContext);
 
 app.Run();
