@@ -12,6 +12,7 @@ connection.on("NewJobEnqueued", function (jobName) {
     console.log(`New job enqueued: ${jobName}`);
     // Update the queue display with the new job
     updateQueueDisplay(jobName);
+    animate()
 });
 
 connection.on("JobProcessed", function (jobName) {
@@ -20,39 +21,39 @@ connection.on("JobProcessed", function (jobName) {
     removeJobFromQueue(jobName);
 });
 
-function sendPrintJob(userName) {
-    const jobName = `${userName}'s job`;
-    console.log(`${userName} is sending a print job to the printer...`);
+// function sendPrintJob(userName) {
+//     const jobName = `${userName}'s job`;
+//     console.log(`${userName} is sending a print job to the printer...`);
     
-    const requestBody = {
-        job:jobName
-    };
+//     const requestBody = {
+//         job:jobName
+//     };
 
-    // API call to enqueue a print job
-    fetch('http://localhost:3000/api/printer/enqueue', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody), // Adjust according to your API's expected format
-    })
-    .then(response => {
-        const contentType = response.headers.get("content-type");
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        } else if(contentType && contentType.includes("application/json")) {
-            return response.json();
-        } else {
-            return response.text();
-        }
-    })
-    .then(data => {
-        console.log(`Response from server: ${data}`);
-    })
-    .catch(error => {
-        console.error('Error sending print job:', error);
-    });
-}
+//     // API call to enqueue a print job
+//     fetch('http://localhost:3000/api/printer/enqueue', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(requestBody), // Adjust according to your API's expected format
+//     })
+//     .then(response => {
+//         const contentType = response.headers.get("content-type");
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! status: ${response.status}`);
+//         } else if(contentType && contentType.includes("application/json")) {
+//             return response.json();
+//         } else {
+//             return response.text();
+//         }
+//     })
+//     .then(data => {
+//         console.log(`Response from server: ${data}`);
+//     })
+//     .catch(error => {
+//         console.error('Error sending print job:', error);
+//     });
+// }
 
 function updateQueueDisplay(jobDescription) {
     // Update the UI to show the new job in the queue
@@ -60,6 +61,9 @@ function updateQueueDisplay(jobDescription) {
     queueList.textContent = queueList.textContent === 'No jobs in queue.'
         ? jobDescription
         : queueList.textContent + ', ' + jobDescription;
+        
+  
+        
 }
 
 function removeJobFromQueue(jobName) {
@@ -67,3 +71,5 @@ function removeJobFromQueue(jobName) {
     const jobs = queueList.textContent.split(', ').filter(j => j !== jobName);
     queueList.textContent = jobs.length > 0 ? jobs.join(', ') : 'No jobs in queue.';
 }
+
+
