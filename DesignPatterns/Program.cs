@@ -40,6 +40,7 @@ builder.Services.AddCors(options =>
     builder => builder.WithOrigins("http://192.168.50.242:3001") // The exact URL of your frontend
                .AllowAnyHeader()
                .AllowAnyMethod()
+               .SetIsOriginAllowed((host) => true)
                .AllowCredentials());
   
 });
