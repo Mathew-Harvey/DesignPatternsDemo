@@ -1,35 +1,39 @@
 using Microsoft.AspNetCore.Mvc;
-using DesignPatterns.Services; // Assuming PrinterQueueService is in the Services namespace
+using DesignPatterns.Services;
 using System.Threading.Tasks;
 using DesignPatterns.Models;
 
-namespace DesignPatterns.Controllers // Corrected namespace
+namespace DesignPatterns.Controllers
 {
     [ApiController]
-    [Route("api/printer")]
+    [Route("api/[controller]")]
     public class PrinterController : ControllerBase
     {
+        private readonly PrinterQueueService _printerQueueService;
 
-
-    // POST api/printer/enqueue
-    [HttpPost("enqueue")]
-    public async Task<IActionResult> EnqueueJob([FromBody] PrintJob printJob)
-    {
-        if (printJob == null || string.IsNullOrWhiteSpace(printJob.Job))
+        public PrinterController(PrinterQueueService printerQueueService)
         {
-            return BadRequest("Print job is required.");
+            _printerQueueService = printerQueueService;
         }
 
-        await PrinterQueueService.Instance.EnqueueJob(printJob.Job);
-        return Ok($"Job '{printJob.Job}' enqueued.");
-    }
+        // POST api/printer/enqueue
+        [HttpPost("enqueue")]
+        public async Task<IActionResult> EnqueueJob([FromBody] PrintJob printJob)
+        {
+            if (printJob == null || string.IsNullOrWhiteSpace(printJob.JobName))
+            {
+                return BadRequest("Print job is required.");
+            }
 
+            await _printerQueueService.EnqueueJob(printJob.JobName);
+            return Ok(new { Message = $"Job '{printJob.JobName}' enqueued.", JobName = printJob.JobName });
+        }
 
         // GET api/printer/jobs
         [HttpGet("jobs")]
         public IActionResult GetJobs()
         {
-            var jobs = PrinterQueueService.Instance.GetJobs();
+            var jobs = _printerQueueService.GetJobs();
             return Ok(jobs);
         }
     }

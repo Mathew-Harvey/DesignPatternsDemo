@@ -1,65 +1,62 @@
-using DesignPatterns.Data; // Adjust the namespace to where your MongoDbContext is
-using DesignPatterns.Repositories; // Adjust the namespace to where your ItemRepository is
+using DesignPatterns.Data;
+using DesignPatterns.Repositories;
 using DesignPatterns.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
 
-// Configure mongoDb
-var mongoConnectionString = builder.Configuration["ConnectionStrings:MongoDB"] ?? "your-default-connection-string";
-var mongoDatabaseName = builder.Configuration["MongoDB:DatabaseName"];
-var mongoClient = new MongoClient(mongoConnectionString);
+// Configure MongoDB
+var mongoConnectionString = builder.Configuration.GetConnectionString("MongoDB") ?? "your-default-connection-string";
+var mongoDatabaseName = builder.Configuration["MongoDB:DatabaseName"] ?? "your-default-database-name";
 
-
-// Check for null or empty database name
-if (string.IsNullOrEmpty(mongoDatabaseName))
+if (string.IsNullOrWhiteSpace(mongoDatabaseName))
 {
     throw new InvalidOperationException("Database name is not configured.");
 }
 
-// Register the MongoDbContext with the necessary constructor parameters
-builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoConnectionString));
-
+// Register the MongoClient as a singleton
+builder.Services.AddSingleton<IMongoClient>(sp => new MongoClient(mongoConnectionString));
 
 // Register the ItemRepository as a scoped service
-builder.Services.AddScoped<ItemRepository>(serviceProvider =>
+builder.Services.AddScoped<ItemRepository>(sp =>
 {
-    var mongoClient = serviceProvider.GetRequiredService<IMongoClient>();
+    var mongoClient = sp.GetRequiredService<IMongoClient>();
     return new ItemRepository(mongoClient, mongoDatabaseName);
 });
 
+// Register the PrinterQueueService as a singleton
+builder.Services.AddSingleton<PrinterQueueService>();
+
+// Configure CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsPolicy", 
-    builder => builder.WithOrigins("http://192.168.50.242:3001") // The exact URL of your frontend
-               .AllowAnyHeader()
-               .AllowAnyMethod()
-               .SetIsOriginAllowed((host) => true)
-               .AllowCredentials());
-  
+    options.AddPolicy("CorsPolicy",
+        policyBuilder => policyBuilder.WithOrigins("http://127.0.0.1:5500") // Replace with your actual front-end URL
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
 });
-
-
 
 var app = builder.Build();
 
+// Use CORS policy
 app.UseCors("CorsPolicy");
 
-
-
-app.MapHub<PrinterHub>("/printerhub");
+// Other middleware
+app.UseRouting();
+app.MapHub<PrinterHub>("/printerHub");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
@@ -70,14 +67,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-    
-
-var hubContext = app.Services.GetRequiredService<IHubContext<PrinterHub>>();
-PrinterQueueService.Instance.SetHubContext(hubContext);
+app.MapControllers();
 
 app.Run();

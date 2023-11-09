@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,40 +8,33 @@ namespace DesignPatterns.Services
 {
     public class PrinterQueueService : IDisposable
     {
-        private static readonly Lazy<PrinterQueueService> _instance = new Lazy<PrinterQueueService>(() => new PrinterQueueService());
-        private IHubContext<PrinterHub> _hubContext;
-        private readonly Queue<string> _printJobs = new Queue<string>();
+        private readonly IHubContext<PrinterHub> _hubContext;
+        private readonly ConcurrentQueue<string> _printJobs = new ConcurrentQueue<string>();
         private Timer _processingTimer;
 
-        private PrinterQueueService()
+        public PrinterQueueService(IHubContext<PrinterHub> hubContext)
         {
+            _hubContext = hubContext ?? throw new ArgumentNullException(nameof(hubContext));
             // Start the timer with an immediate first tick, then continue every 5 seconds
             _processingTimer = new Timer(ProcessQueue, null, TimeSpan.Zero, TimeSpan.FromSeconds(7));
         }
 
-        public static PrinterQueueService Instance => _instance.Value;
-
-        public void SetHubContext(IHubContext<PrinterHub> hubContext)
-        {
-            _hubContext = hubContext ?? throw new ArgumentNullException(nameof(hubContext));
-        }
-
         private void ProcessQueue(object? state)
         {
-            if (_printJobs.Count == 0)
+            if (_printJobs.IsEmpty)
             {
                 // No jobs to process
                 return;
             }
 
-            // Dequeue and process the job
-            var jobName = _printJobs.Dequeue();
+            if (_printJobs.TryDequeue(out var jobName))
+            {
+                // Simulate job processing
+                Console.WriteLine($"Processing job: {jobName}");
 
-            // Simulate job processing
-            Console.WriteLine($"Processing job: {jobName}");
-
-            // Notify clients that the job is processed
-            _hubContext.Clients.All.SendAsync("JobProcessed", jobName).GetAwaiter().GetResult();
+                // Notify clients that the job is processed
+                _hubContext.Clients.All.SendAsync("JobProcessed", jobName).GetAwaiter().GetResult();
+            }
         }
 
         public async Task EnqueueJob(string jobName)

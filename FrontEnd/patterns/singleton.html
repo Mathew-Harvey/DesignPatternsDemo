@@ -40,11 +40,7 @@
 <body>
     <h1>Printer Queue Demo</h1>
 
-    <div id="users">
-        <div class="user" onclick="sendPrintJob('User 1')">User 1: Click to send a print job</div>
-        <div class="user" onclick="sendPrintJob('User 2')">User 2: Click to send a print job</div>
-        <div class="user" onclick="sendPrintJob('User 3')">User 3: Click to send a print job</div>
-    </div>
+
 
     <div class="printer">Printer: Waiting for jobs...</div>
 
@@ -73,9 +69,10 @@
             printing resource. The use of a Singleton here is crucial for maintaining the integrity and consistency of
             the print job processing throughout the application's lifecycle.</p>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.9/signalr.min.js"></script>
     <script src="../js/script.js"></script>
-    <script src="../js/animation.js"></script>
     <script src="../js/singleton.js"></script>
+
 </body>
 
 </html>
