@@ -8,49 +8,122 @@
 
     <title>Singleton Printer Queue Demo</title>
     <style>
-        .user,
-        .printer {
+        :root {
+            /* Define color palette based on the provided image */
+            --color-nav-bg: #F55D3E;
+            /* Example color */
+            --color-banner-bg: #F7CB15;
+            /* Example color */
+            --color-box-bg: #7C3F58;
+            /* Example color */
+            --color-text: #4D1A7F;
+            /* Example color */
+            --color-widget-bg: #3066BE;
+            /* Example color */
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+        }
+  /* Nav Bar Styles */
+  .global-nav {
+            background: #333;
+            color: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0.5em 0;
+        }
+
+        .global-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5em 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .global-nav a:hover,
+        .global-nav a:focus {
+            background-color: #555;
+            outline: none;
+        }
+
+        /* Logo or Branding Styles */
+        .branding {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+       
+
+
+        .banner {
+            background-color: var(--color-banner-bg);
             padding: 20px;
-            margin: 10px;
-            text-align: center;
-            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
 
-        .user {
-            background-color: #add8e6;
+        .banner img {
+            max-width: 100%;
+            max-height: 200px;
+            /* Adjust as needed */
         }
 
-        .printer {
-            background-color: #90ee90;
+        .animation-box {
+            width: 850px;
+
+            margin: 20px auto;
+            background-color: var(--color-box-bg);
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        #queue {
-            margin-top: 20px;
+        .content {
+            width: 800px;
+            margin: 0 auto;
+            color: var(--color-text);
+        }
+
+        .printer-queue {
+            background-color: var(--color-widget-bg);
+            color: white;
+            padding: 20px;
+            width: 300px;
+            /* Adjust as needed */
+            margin: 20px auto;
         }
     </style>
 </head>
-<nav>
-    <ul>
-        <li><a href="../index.html">Home</a></li>
-        <li><a href="../patterns/todo.html">todo list</a></li>
-        <!-- Add other design pattern links here -->
-    </ul>
-</nav>
+
 
 <body>
-    <h1>Printer Queue Demo</h1>
 
 
 
-    <div class="printer">Printer: Waiting for jobs...</div>
-
-    <div id="queue">
-        <h2>Print Queue:</h2>
-        <div id="queueList">No jobs in queue.</div>
+    <div class="global-nav">
+        <a href="../index.html">Home</a>
+        <a href="../patterns/todo.html">todo list</a>
     </div>
-    <canvas id="officeCanvas" width="800" height="600"></canvas>
 
-    <div>
+    <div class="banner">
+        <!-- Banner image here -->
+        <img src="../assetsSinglton/singletonBanner.png" style="height:100 ;">
+    </div>
+
+    <div class="animation-box">
+        <canvas id="officeCanvas" width="800" height="600"></canvas>
+
+    </div>
+    <div class="printer-queue">
+        <div id="queue">
+            <h2>Print Queue:</h2>
+            <div id="queueList">No jobs in queue.</div>
+        </div>
+    </div>
+    <div class="content">
         <p>The printer analogy for the Singleton design pattern serves as a conceptual model that illustrates the
             pattern's core principle: ensuring that a class has only one instance and providing a global point of access
             to it. In a typical office environment, a shared printer is a common resource that multiple users or systems
@@ -69,6 +142,7 @@
             printing resource. The use of a Singleton here is crucial for maintaining the integrity and consistency of
             the print job processing throughout the application's lifecycle.</p>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.9/signalr.min.js"></script>
     <script src="../js/script.js"></script>
     <script src="../js/singleton.js"></script>
