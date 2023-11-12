@@ -10,6 +10,14 @@ connection.start()
     .then(() => console.log("Connected to SignalR hub!"))
     .catch(err => console.error("SignalR Connection Error: ", err));
 
+connection.on("ReceiveSassyResponse", function (message) {
+    console.log("The printer says: ", message);
+    // You can update the front end with this message, for example, show it in an alert or display it on the page
+    alert("The printer says: " + message); // Or update an element on your page
+});
+
+
+
 connection.on("NewJobEnqueued", function (jobName) {
     console.log(`New job enqueued: ${jobName}`);
     // Update the queue display with the new job
@@ -69,6 +77,11 @@ function removeJobFromQueue(jobName) {
         }
     }
 }
+function requestSassyPrinterResponse() {
+    connection.invoke("GetSassyPrinterResponse").catch(function (err) {
+        return console.error(err.toString());
+    });
+}
 
 function removePrintJobFromCanvas(jobName) {
     // Filter out the completed job
@@ -80,6 +93,7 @@ function removePrintJobFromCanvas(jobName) {
             ctx.drawImage(job.img, job.x, job.y, job.width, job.height);
         }
     });
+    requestSassyPrinterResponse()
 }
 document.addEventListener("DOMContentLoaded", function () {
     const canvas = document.getElementById('officeCanvas');

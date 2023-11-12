@@ -4,31 +4,19 @@ using System.Threading.Tasks;
 
 public class PrinterHub : Hub
 {
+    private readonly OpenAIService _openAIService;
     private readonly PrinterQueueService _printerQueueService;
 
-    public PrinterHub(PrinterQueueService printerQueueService)
+    public PrinterHub(OpenAIService openAIService, PrinterQueueService printerQueueService)
     {
+        _openAIService = openAIService;
         _printerQueueService = printerQueueService;
     }
 
-    // This method can be called by clients to send a new print job
-    public async Task SendPrintJob(string jobName, int deskX, int deskY)
+    // Call this method from the client to get the sassy response
+    public async Task GetSassyPrinterResponse()
     {
-        // Logic to enqueue the job to the server-side printer queue
-        await _printerQueueService.EnqueueJob(jobName);
-
-        // Notify all clients that a new job has been added
-        await Clients.All.SendAsync("NewJobEnqueued", new { JobName = jobName, DeskX = deskX, DeskY = deskY });
+        var response = await _openAIService.GetPrinterResponse();
+        await Clients.Caller.SendAsync("ReceiveSassyResponse", response);
     }
-
-    public async Task StartProcessingJob(string jobName)
-    {
-        // Logic to start processing the job, e.g., update the job status in the database
-        // ...
-
-        // After processing logic, notify the client that requested the job
-        await Clients.Caller.SendAsync("JobProcessed", jobName);
-    }
-
-    // Additional methods for other real-time interactions can be added here
 }

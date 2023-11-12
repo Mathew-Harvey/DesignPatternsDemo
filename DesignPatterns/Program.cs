@@ -34,6 +34,21 @@ builder.Services.AddScoped<ItemRepository>(sp =>
 // Register the PrinterQueueService as a singleton
 builder.Services.AddSingleton<PrinterQueueService>();
 
+// Register the OpenAI
+builder.Services.AddHttpClient<OpenAIService>(); 
+builder.Services.AddSingleton(sp =>
+{
+    var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient();
+    var apiKey = builder.Configuration["OpenAI:ApiKey"]; // Ensure you have this in your appsettings.json
+    return new OpenAIService(httpClient, apiKey);
+});
+builder.Services.AddSingleton<PrinterQueueService>(sp =>
+{
+    var hubContext = sp.GetRequiredService<IHubContext<PrinterHub>>();
+    var openAIService = sp.GetRequiredService<OpenAIService>();
+    return new PrinterQueueService(hubContext, openAIService);
+});
+
 // Configure CORS
 builder.Services.AddCors(options =>
 {
