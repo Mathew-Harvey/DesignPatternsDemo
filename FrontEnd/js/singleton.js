@@ -21,8 +21,30 @@ connection.on("JobProcessed", function (jobName) {
     console.log(`Job processed: ${jobName}`);
     // Remove the job from the queue display
     removeJobFromQueue(jobName);
+    updateQueuePositions(jobName);
 });
 
+// Function to update the queue positions of jobs on the canvas
+function updateQueuePositions() {
+    let queueOffset = 10; // Space between queued jobs at the printer
+    let nextQueuePosition = printerPos.y + queueOffset; // Initial y-position for the first job in the queue
+
+    printJobs.forEach(job => {
+        if (job.status === 'queued') {
+            // Update the y-position of the queued job.
+            job.y = nextQueuePosition;
+            // Calculate the next y-position for the subsequent job.
+            nextQueuePosition += job.height + queueOffset;
+        }
+    });
+    // Redraw the canvas to reflect the new positions of the jobs
+    drawScene();
+    printJobs.forEach(job => {
+        if (job.status !== 'completed') {
+            ctx.drawImage(job.img, job.x, job.y, job.width, job.height);
+        }
+    });
+}
 // Function to update the display of the print queue
 function updateQueueDisplay(jobDescription) {
     const queueList = document.getElementById('queueList');
@@ -31,24 +53,34 @@ function updateQueueDisplay(jobDescription) {
         : queueList.textContent + ', ' + jobDescription;
 }
 
-// Function to remove a print job from the canvas and queue
 function removeJobFromQueue(jobName) {
     const queueList = document.getElementById('queueList');
-    const jobs = queueList.textContent.split(', ').filter(j => j !== jobName);
-    queueList.textContent = jobs.length > 0 ? jobs.join(', ') : 'No jobs in queue.';
-    removePrintJobFromCanvas(jobName); // Update the canvas when a job is processed
-}
-
-// Function to remove a print job from the canvas when processed
-function removePrintJobFromCanvas(jobName) {
-    const jobIndex = printJobs.findIndex(job => job.id === jobName);
+    const jobsText = queueList.textContent.split(', ').filter(j => j !== jobName);
+    queueList.textContent = jobsText.length > 0 ? jobsText.join(', ') : 'No jobs in queue.';
+    // Remove the job from the array and canvas
+    const jobIndex = printJobs.findIndex(job => job.JobName === jobName);
     if (jobIndex !== -1) {
-        printJobs[jobIndex].status = 'completed'; // Mark the job as completed
+        printJobs.splice(jobIndex, 1); // Remove the job from the array
+        // If the queue is empty, clear the canvas of job images
+        if (queueList.textContent === 'No jobs in queue.') {
+            clearCanvasOfJobs();
+        } else {
+            updateQueuePositions();
+        }
     }
-    // Filter out the completed jobs after updating their status
-    printJobs = printJobs.filter(job => job.status !== 'completed');
 }
 
+function removePrintJobFromCanvas(jobName) {
+    // Filter out the completed job
+    printJobs = printJobs.filter(job => job.JobName !== jobName);
+    drawScene();  // Redraw the scene to update the canvas
+    // Redraw remaining jobs
+    printJobs.forEach(job => {
+        if (job.status !== 'completed') {
+            ctx.drawImage(job.img, job.x, job.y, job.width, job.height);
+        }
+    });
+}
 document.addEventListener("DOMContentLoaded", function () {
     const canvas = document.getElementById('officeCanvas');
     const ctx = canvas.getContext('2d');
@@ -138,15 +170,15 @@ document.addEventListener("DOMContentLoaded", function () {
         { x: 640, y: 170, img: personThree },
     ];
     const printerPos = { x: 50, y: 250 };
-    const coffeeCupPos = { x: 630, y: 270}
+    const coffeeCupPos = { x: 630, y: 270 }
 
     // Main animation loop
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawScene();
         animateJobs();
-       peopleTyping();
-        requestAnimationFrame(animate); 
+        peopleTyping();
+        requestAnimationFrame(animate);
     }
 
     // Function to draw the static parts of the scene
@@ -170,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const typingSpeedMax = 200; // Maximum speed of typing animation in milliseconds
         const typingPauseMin = 500; // Minimum pause between typing bursts in milliseconds
         const typingPauseMax = 2000; // Maximum pause between typing bursts in milliseconds
-    
+
         // This loop will create a natural typing effect by moving the image up and down
         persons.forEach(person => {
             // Toggle the typing offset between -1 and 1 pixels to simulate a subtle typing effect
@@ -179,24 +211,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 person.typingDirection = person.typingDirection || 1;
                 person.typingOffset += person.typingDirection;
                 person.y += person.typingDirection; // Apply the offset to the y position
-    
+
                 // Change direction if amplitude is reached
                 if (Math.abs(person.typingOffset) > typingAmplitude) {
                     person.typingDirection *= -1;
                 }
             }
         });
-    
+
         // After altering the positions, redraw the scene to reflect the changes
         drawScene();
-    
+
         // Randomly decide to pause typing
         if (Math.random() > 0.7) {
             // Introduce a pause in typing
             persons.forEach(person => {
                 person.isTyping = false;
             });
-    
+
             // Determine how long to pause before typing again
             const typingPause = Math.floor(Math.random() * (typingPauseMax - typingPauseMin + 1) + typingPauseMin);
             setTimeout(() => {
@@ -211,43 +243,53 @@ document.addEventListener("DOMContentLoaded", function () {
             setTimeout(peopleTyping, typingSpeed);
         }
     }
-    
+
     // Initialize typing
     persons.forEach(person => {
         person.isTyping = true; // Start everyone typing
     });
 
 
-     // Main animation loop
-     function animate() {
+    // Main animation loop
+    function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         peopleTyping();
         drawScene();
         animateJobs();
-      
-        requestAnimationFrame(animate); 
+        requestAnimationFrame(animate);
     }
     // Function to animate the documents moving to the printer
     function animateJobs() {
+        let queueOffset = 25; // Space between queued jobs at the printer
+        let nextQueuePosition = printerPos.x + queueOffset; // Y position for the first job in the queue
+
         printJobs.forEach(job => {
             if (job.status === 'waiting' || job.status === 'moving') {
                 const toPrinterX = printerPos.x - job.x;
                 const toPrinterY = printerPos.y - job.y;
                 const distanceToPrinter = Math.sqrt(toPrinterX ** 2 + toPrinterY ** 2);
 
-                if (distanceToPrinter > 1) {
+                if (distanceToPrinter > 5) { // Adjust as necessary for how close a job can get to the printer
                     const normX = toPrinterX / distanceToPrinter;
                     const normY = toPrinterY / distanceToPrinter;
-                    job.x += normX * 0.8;
-                    job.y += normY * 0.8;
+                    job.x += normX * 1.5; // Adjust speed if necessary
+                    job.y += normY * 1.5; // Adjust speed if necessary
                     job.status = 'moving';
-                    ctx.drawImage(job.img, job.x, job.y, job.width, job.height);
                 } else {
-                    job.status = 'at_printer';
+                    job.status = 'queued';
                 }
             }
+
+            if (job.status === 'queued') {
+                job.x = nextQueuePosition;
+                nextQueuePosition += job.height + queueOffset; // Update next position
+            }
+
+            // Draw the job at its current position
+            ctx.drawImage(job.img, job.x, job.y, job.width, job.height);
         });
     }
+
 
     // Click event listener for the canvas
     canvas.addEventListener('click', function (event) {
@@ -257,27 +299,28 @@ document.addEventListener("DOMContentLoaded", function () {
         desks.forEach((desk, index) => {
             if (clickX >= desk.x && clickX <= desk.x + desk.img.width &&
                 clickY >= desk.y && clickY <= desk.y + desk.img.height) {
-                animateDoc(desk.x, desk.y);
-                enqueuePrintJob(index);
+                const jobName = `Job from desk ${index + 1}`;
+                animateDoc(desk.x, desk.y, jobName);
+                enqueuePrintJob(index, jobName);
             }
         });
     });
 
-    function animateDoc(deskX, deskY) {
+    function animateDoc(deskX, deskY, jobName) {
         const newJob = {
             x: deskX,
             y: deskY,
             img: documentImg,
             width: documentImg.width,
             height: documentImg.height,
-            status: 'waiting'
+            status: 'waiting',
+            JobName: jobName,
         };
         printJobs.push(newJob);
     }
 
-    function enqueuePrintJob(deskIndex) {
+    function enqueuePrintJob(deskIndex, jobName) {
         const desk = desks[deskIndex];
-        const jobName = `Job from desk ${deskIndex + 1}`;
         const requestBody = {
             JobName: jobName
         };
