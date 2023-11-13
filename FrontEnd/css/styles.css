@@ -1,22 +1,103 @@
-/* Simple CSS file to style the items list */
-body {
-    font-family: Arial, sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+:root {
+    --primary-color: #5E81AC;
+    --secondary-color: #88C0D0;
+    --accent-color: #EBCB8B;
+    --light-color: #E5E9F0;
+    --dark-color: #2E3440;
+    --font-primary: 'Roboto', sans-serif;
+}
+
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: var(--font-primary);
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    line-height: 1.6;
+}
+
+.global-nav {
+    background-color: var(--primary-color);
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.global-nav a {
+    color: var(--light-color);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease-in-out;
+}
+
+.global-nav a:hover, .global-nav a:focus {
+    color: var(--accent-color);
+    background-color: var(--secondary-color);
+}
+
+.banner {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.banner img {
+    max-width: 100%;
+    height: auto;
+}
+
+.animation-box {
+    position: relative;
+    width: 850px;
+
+    margin: 20px auto;
+    background-color: var(--secondary-color);
     padding: 20px;
-    background-color: #f7f7f7;
+    box-sizing: border-box;
+   
+    padding: 1rem;
+    margin: 1rem auto;
+   
 }
 
-h1 {
-    color: #333;
+.speech-balloon {
+    position: absolute;
+    top: 30px;
+    left: 0px;
+    width: 200px;
+    padding: 20px;
+    background: #f5f5f5;
+    border: 2px solid #666;
+    border-radius: 50px;
+    box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Ensure it floats above everything else */
 }
 
-#items-container {
-    margin-top: 20px;
+.printer-queue {
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    padding: 1rem;
+    margin: 1rem auto;
+    max-width: 350px;
+    border-radius: 0.5rem;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.item {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
+.content {
+    max-width: 800px;
+    margin: 1rem auto;
+    padding: 1rem;
+    background-color: var(--light-color);
+    border-radius: 0.5rem;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+/* Additional styles can be added as needed */

@@ -4,27 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design Patterns Demo</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
-    <h1>Design Patterns Demo</h1>
+    <header class="site-header">
+        <h1 class="site-title">Design Patterns Demo</h1>
+    </header>
     
-    <!-- Menu for Design Patterns -->
-    <nav>
-        <ul>
-            <li><a href="patterns/todo.html">To Do Application</a></li>
-            <li><a href="patterns/singleton.html">Singleton Pattern</a></li>
-            <!-- Add other design pattern links here -->
-        </ul>
+    <nav class="global-nav">
+        <a href="index.html">Home</a>
+        <a href="patterns/singleton.html">Singleton</a>
+        <a href="patterns/factory.html">Factory</a>
+        <a href="patterns/abstract.html">Abstract Factory</a>
+        <a href="patterns/builder.html">Builder</a>
+        <a href="patterns/prototype.html">Prototype</a>
+        <a href="patterns/adapter.html">Adapter</a>
+        <a href="patterns/decorator.html">Decorator</a>
+        <a href="patterns/facade.html">Facade</a>
+        <a href="patterns/index.html">Patterns Home</a>
+        <a href="patterns/todo.html">To Do List</a>
     </nav>
 
-    <!-- You might want to keep the existing forms and list, or move them to specific pattern pages -->
-    <div id="existing-content">
+    <main id="existing-content">
         <!-- Existing content here -->
-    </div>
+    </main>
 
     <script src="js/script.js"></script>
     <script src="js/singleton.js"></script>
     <script src="js/todo.js"></script>
 </body>
-</html>

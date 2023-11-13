@@ -31,29 +31,26 @@ builder.Services.AddScoped<ItemRepository>(sp =>
     return new ItemRepository(mongoClient, mongoDatabaseName);
 });
 
-// Register the PrinterQueueService as a singleton
-builder.Services.AddSingleton<PrinterQueueService>();
-
-// Register the OpenAI
-builder.Services.AddHttpClient<OpenAIService>(); 
-builder.Services.AddSingleton(sp =>
-{
-    var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient();
-    var apiKey = builder.Configuration["OpenAI:ApiKey"]; // Ensure you have this in your appsettings.json
-    return new OpenAIService(httpClient, apiKey);
-});
+// Register the PrinterQueueService and OpenAIService as singletons
 builder.Services.AddSingleton<PrinterQueueService>(sp =>
 {
     var hubContext = sp.GetRequiredService<IHubContext<PrinterHub>>();
     var openAIService = sp.GetRequiredService<OpenAIService>();
     return new PrinterQueueService(hubContext, openAIService);
 });
+builder.Services.AddHttpClient<OpenAIService>(); 
+builder.Services.AddSingleton<OpenAIService>(sp =>
+{
+    var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient();
+    var apiKey = builder.Configuration["OpenAI:ApiKey"]; // Ensure this is secured in production
+    return new OpenAIService(httpClient, apiKey);
+});
 
 // Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
-        policyBuilder => policyBuilder.WithOrigins("http://127.0.0.1:5500") // Replace with your actual front-end URL
+        policyBuilder => policyBuilder.WithOrigins("http://127.0.0.1:5500")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
@@ -64,14 +61,10 @@ var app = builder.Build();
 // Use CORS policy
 app.UseCors("CorsPolicy");
 
-// Other middleware
-app.UseRouting();
-app.MapHub<PrinterHub>("/printerHub");
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
+    app.UseExceptionHandler("/Error"); // Ensure there is a corresponding Error action
     app.UseHsts();
 }
 
@@ -82,6 +75,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapHub<PrinterHub>("/printerHub"); // Ensure PrinterHub is correctly implemented
 app.MapControllers();
 
 app.Run();
